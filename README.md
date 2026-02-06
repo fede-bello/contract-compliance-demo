@@ -1,27 +1,27 @@
-# Sistema de Cumplimiento de Contratos
+# Sistema de Validación de Pólizas
 
-Sistema automatizado de validación de pólizas de seguro usando LLMs. Analiza documentos PDF y valida ítems reportados contra las reglas de la póliza.
+Sistema automatizado para validar reportes de daños contra las reglas de una póliza de seguro. Procesa documentos PDF y genera decisiones de aprobación, rechazo o justificación para cada ítem.
 
-## 📋 Requisitos
+## Requisitos
 
 - Python 3.11+
-- [uv](https://docs.astral.sh/uv/)
+- uv (gestor de paquetes)
 - Variables de entorno:
   - `OPENAI_API_KEY`
   - `ANTHROPIC_API_KEY`
   - `LLAMA_CLOUD_API_KEY`
 
-## 🚀 Instalación
+## Instalación
 
 ```bash
-# 1. Instalar uv (si no lo tienes)
+# 1. Instalar uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 2. Clonar y entrar al proyecto
+# 2. Clonar proyecto
 git clone <repository-url>
 cd contract-compliance-demo
 
-# 3. Crear archivo .env con tus API keys
+# 3. Crear .env
 echo "OPENAI_API_KEY=sk-..." >> .env
 echo "ANTHROPIC_API_KEY=sk-ant-..." >> .env
 echo "LLAMA_CLOUD_API_KEY=llx-..." >> .env
@@ -30,9 +30,9 @@ echo "LLAMA_CLOUD_API_KEY=llx-..." >> .env
 uv sync
 ```
 
-## 📂 Archivos requeridos
+## Archivos de entrada
 
-Coloca tus PDFs en `data/`:
+Coloca los PDFs en `data/`:
 
 ```
 data/
@@ -40,41 +40,48 @@ data/
 └── Reporte.pdf    # Reporte de daños
 ```
 
-## 💻 Uso
+## Uso
 
-**Interfaz web (recomendado):**
+Interfaz web:
+
 ```bash
 ./run_streamlit.sh
 ```
 
-**Ejecutar workflow directamente:**
+O ejecutar directamente:
+
 ```bash
 uv run python workflow.py
 ```
 
-Generará `reporte_final.json` con los resultados.
+Genera `reporte_final.json` con los resultados.
 
-## 📊 Flujo
+## Flujo de trabajo
 
-1. **Parseo**: Analiza ambos PDFs con OCR
-2. **Extracción**: Extrae reglas y restricciones de la póliza
-3. **Validación**: Valida cada ítem del reporte contra las reglas
-4. **Decisión**: Aprueba, rechaza o justifica cada ítem
+1. Parseo de documentos PDF
+2. Extracción de reglas de la póliza
+3. Validación de ítems del reporte contra las reglas
+4. Generación de decisiones por ítem
 
-## 🏗️ Estructura
+## Estructura del proyecto
 
 ```
-├── app.py              # Interfaz Streamlit
-├── workflow.py         # Workflow principal
-├── models.py           # Modelos de datos
-├── steps/              # Pasos del workflow
-└── utils/              # Utilidades
+├── app.py              Interfaz Streamlit
+├── workflow.py         Workflow principal
+├── models.py           Modelos de datos
+├── steps/              Pasos del workflow
+│   ├── document_parse/
+│   ├── extract_rules/
+│   └── validate_reporte/
+└── utils/              Utilidades
+    ├── llm.py
+    └── logging.py
 ```
 
-## 🔧 Modelos LLM
+## Control de calidad
 
-- **Claude Sonnet 4.5**: Extracción y validación
-- **OpenAI GPT**: Embeddings
-- **LlamaCloud**: Parsing de PDFs
-
-Modifica en `utils/llm.py` si necesitas otros modelos.
+```bash
+uv run ruff check --fix .    # Linting
+uv run ruff format .         # Formateo
+pre-commit run --all-files   # Pre-commit hooks
+```
