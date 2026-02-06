@@ -5,8 +5,12 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "llama-index>=0.14.13",
+    "llama-index-llms-anthropic>=0.10.8",
+    "llama-index[anthropic]>=0.14.13",
     "pre-commit>=4.5.1",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
     "ruff>=0.15.0",
+    "streamlit>=1.54.0",
     "ty>=0.0.15",
 ]
